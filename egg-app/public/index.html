@@ -12,31 +12,29 @@
     <script src="https://unpkg.com/react@16.7.0/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone@7.13.12/babel.js"></script>
-    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
     <script type="text/babel">
+
+    function CharacterCount({text}) {
+
+      return (
+        <div>
+          {`The text "${text}" has `}
+          {text.length ? <strong>{text.length}</strong> : 'NO'}
+          {' characters'}  
+        </div>
+      )
+    }
+
+    const element = (
+      <>
+        <CharacterCount text="Hello World" />
+        <CharacterCount text="" />
+      </>
+    )
+
+
    
-      const rootElement = document.getElementById('root');
-
-
-      function SayHello({firstName, lastName}) {
-        return (
-          <div>
-            Hello {firstName} {lastName}!
-          </div>
-        )
-      }
-
-      
-      SayHello.propTypes  = {
-       firstName: PropTypes.string.isRequired,
-       lastName: PropTypes.string.isRequired,
-      }
-
-
-      const element = <SayHello firstName={false} lastname={false} />
-
-
-      ReactDOM.render(element, rootElement)
+    ReactDOM.render(element, document.getElementById('root')); 
     </script>
  
   </body>
