@@ -15,70 +15,45 @@
   <script src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone@7.13.12/babel.js"></script>
 
-  <style>
-    .box {
-      border: 1px solid #333;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .box--large {
-      width: 270px;
-      height: 180px;
-    }
-
-    .box--medium {
-      width: 180px;
-      height: 180px;
-    }
-
-    .box--small {
-      width: 90px;
-      height: 90px;
-    }
-  </style>
-
   <script type="text/babel">
 
     const rootElement = document.getElementById('root');
 
-    function Box({ className = '', style, size, ...rest }) {
-      const sizeClassName = size ? `box--${size}` : ''
-      const
+    const state = { eventCount: 10, username: '' }
 
+    function App() {
+      function handleClick() {
+        setState({ eventCount: state.eventCount + 1 });
+      }
+      function handleChange(event) {
+        // console.log(event);
+        setState({ username: event.target.value })
+      }
       return (
-        <div
-          className={`box ${className} ${sizeClassName} `}
-          style={{ fontStyle: 'italic', ...style }}
-          {...rest}
-        />
+        <div>
+          <p>There have been {state.eventCount} events.</p>
+          <p>
+            <button onClick={handleClick}>Click Me</button>
+          </p>
+          <p>You typed: {state.username}</p>
+          <p>
+            <input onChange={handleChange} />
+          </p>
+        </div >
       )
     }
 
-    const element = (
-      <div>
-        <Box
-          size="small"
-          style={{ backgroundColor: 'lightblue' }}>
-          small lightblue box
-        </Box>
-        <Box
-          size="medium"
-          style={{ backgroundColor: 'pink' }}>
-          medium pink box
-        </Box>
-        <Box
-          size="large"
-          style={{ backgroundColor: 'orange' }}>
-          large orange box
-        </Box>
+    function setState(newState) {
+      Object.assign(state, newState)
+      renderApp()
+    }
 
-      </div>
-    )
+    function renderApp() {
+      ReactDOM.render(<App />, rootElement);
+    }
 
-    ReactDOM.render(element, rootElement);
+    renderApp()
+
   </script>
 
 </body>
