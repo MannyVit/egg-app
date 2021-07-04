@@ -11,48 +11,43 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-  <script src="https://unpkg.com/react@16.7.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.7.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone@7.13.12/babel.js"></script>
 
   <script type="text/babel">
 
     const rootElement = document.getElementById('root');
 
-    const state = { eventCount: 10, username: '' }
-
-    function App() {
-      function handleClick() {
-        setState({ eventCount: state.eventCount + 1 });
-      }
-      function handleChange(event) {
-        // console.log(event);
-        setState({ username: event.target.value })
-      }
+    function Greeting() {
+      const [name, setName] = React.useState('')
+      const [name2, setName2] = React.useState('')
+      const handleChange = event => setName(event.target.value)
+      const handleChange2 = event => setName2(event.target.value)
       return (
         <div>
-          <p>There have been {state.eventCount} events.</p>
-          <p>
-            <button onClick={handleClick}>Click Me</button>
-          </p>
-          <p>You typed: {state.username}</p>
-          <p>
-            <input onChange={handleChange} />
-          </p>
-        </div >
+          <form>
+            <label htmlFor="name">Name:</label>
+            <input id="name" onChange={handleChange} />
+          </form>
+          {name ? <strong>Hello {name}</strong> : 'Please type your name'}
+
+          <div>
+            <form>
+              <label htmlFor="name">Name:</label>
+              <input id="name" onChange={handleChange2} />
+            </form>
+            {name2 ? <strong>Hello {name2}</strong> : 'Please type your name'}
+          </div>
+        </div>
       )
     }
 
-    function setState(newState) {
-      Object.assign(state, newState)
-      renderApp()
-    }
+    // function renderApp() {
+    ReactDOM.render(<Greeting />, rootElement);
+    // }
 
-    function renderApp() {
-      ReactDOM.render(<App />, rootElement);
-    }
-
-    renderApp()
+    // renderApp()
 
   </script>
 
