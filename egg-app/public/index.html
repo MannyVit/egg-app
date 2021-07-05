@@ -21,31 +21,39 @@
 
     function Greeting() {
       const [name, setName] = React.useState(() => {
-        console.log('hello')
+        // console.log('hello')
         return window.localStorage.getItem('name') || ''
       })
-      console.log('rendered')
+      // console.log('rendered')
 
       React.useEffect(() => {
+        console.log('Greeting useEffect')
         window.localStorage.setItem('name', name)
-      })
+      }, [name])
+
       const handleChange = event => setName(event.target.value)
       return (
         <div>
           <form>
             <label htmlFor="name">Name:</label>
-            <input id="name" onChange={handleChange} />
+            <input id="name" onChange={handleChange} value={name} />
           </form>
           {name ? <strong>Hello {name}</strong> : 'Please type your name'}
         </div>
       )
     }
 
-    // function renderApp() {
-    ReactDOM.render(<Greeting />, rootElement);
-    // }
+    function App() {
+      const [count, setCount] = React.useState(0)
+      return (
+        <>
+          <button onClick={() => setCount(c => c + 1)}>{count}</button>
+          <Greeting />
+        </>
+      )
+    }
 
-    // renderApp()
+    ReactDOM.render(<App />, rootElement);
 
   </script>
 
