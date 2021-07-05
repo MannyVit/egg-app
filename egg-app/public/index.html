@@ -9,48 +9,128 @@
 </head>
 
 <body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.13.12/babel.js"></script>
-
+  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
   <script type="text/babel">
+    // https://github.com/donavon/hook-flow
 
-    const rootElement = document.getElementById('root');
+    function Child() {
+      console.log('%c    Child: render start', 'color: MediumSpringGreen')
 
-    function useLocalStorageState(key, defaultValue = '') {
-      const [state, setState] = React.useState(
-        () => window.localStorage.getItem(key) || defaultValue
-      )
+      const [count, setCount] = React.useState(() => {
+        console.log('%c    Child: useState callback', 'color: tomato')
+        return 0
+      })
 
       React.useEffect(() => {
-        window.localStorage.setItem(key, state)
-      }, [key, state])
+        console.log('%c    Child: useEffect no deps', 'color: LightCoral')
+        return () => {
+          console.log(
+            '%c    Child: useEffect no deps cleanup',
+            'color: LightCoral',
+          )
+        }
+      })
 
-      return [state, setState]
-    }
+      React.useEffect(() => {
+        console.log(
+          '%c    Child: useEffect empty deps',
+          'color: MediumTurquoise',
+        )
+        return () => {
+          console.log(
+            '%c    Child: useEffect empty deps cleanup',
+            'color: MediumTurquoise',
+          )
+        }
+      }, [])
 
-    function Greeting() {
-      const [name, setName] = useLocalStorageState('name')
+      React.useEffect(() => {
+        console.log('%c    Child: useEffect with dep', 'color: HotPink')
+        return () => {
+          console.log(
+            '%c    Child: useEffect with dep cleanup',
+            'color: HotPink',
+          )
+        }
+      }, [count])
 
-      const handleChange = event => setName(event.target.value)
-      return (
-        <div>
-          <form>
-            <label htmlFor="name">Name:</label>
-            <input id="name" onChange={handleChange} value={name} />
-          </form>
-          {name ? <strong>Hello {name}</strong> : 'Please type your name'}
-        </div>
+      const element = (
+        <button onClick={() => setCount(previousCount => previousCount + 1)}>
+          {count}
+        </button>
       )
+
+      console.log('%c    Child: render end', 'color: MediumSpringGreen')
+
+      return element
     }
 
+    function App() {
+      console.log('%cApp: render start', 'color: MediumSpringGreen')
 
-    ReactDOM.render(<Greeting />, rootElement);
+      const [showChild, setShowChild] = React.useState(() => {
+        console.log('%cApp: useState callback', 'color: tomato')
+        return false
+      })
 
+      React.useEffect(() => {
+        console.log('%cApp: useEffect no deps', 'color: LightCoral')
+        return () => {
+          console.log('%cApp: useEffect no deps cleanup', 'color: LightCoral')
+        }
+      })
+
+      React.useEffect(() => {
+        console.log('%cApp: useEffect empty deps', 'color: MediumTurquoise')
+        return () => {
+          console.log(
+            '%cApp: useEffect empty deps cleanup',
+            'color: MediumTurquoise',
+          )
+        }
+      }, [])
+
+      React.useEffect(() => {
+        console.log('%cApp: useEffect with dep', 'color: HotPink')
+        return () => {
+          console.log('%cApp: useEffect with dep cleanup', 'color: HotPink')
+        }
+      }, [showChild])
+
+      const element = (
+        <>
+          <label>
+            <input
+              type="checkbox"
+              checked={showChild}
+              onChange={e => setShowChild(e.target.checked)}
+            />{' '}
+            show child
+          </label>
+          <div
+            style={{
+              padding: 10,
+              margin: 10,
+              height: 30,
+              width: 30,
+              border: 'solid',
+            }}
+          >
+            {showChild ? <Child /> : null}
+          </div>
+        </>
+      )
+
+      console.log('%cApp: render end', 'color: MediumSpringGreen')
+
+      return element
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'))
   </script>
-
 </body>
 
 </html>
