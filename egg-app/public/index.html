@@ -19,17 +19,20 @@
 
     const rootElement = document.getElementById('root');
 
-    function Greeting() {
-      const [name, setName] = React.useState(() => {
-        // console.log('hello')
-        return window.localStorage.getItem('name') || ''
-      })
-      // console.log('rendered')
+    function useLocalStorageState(key, defaultValue = '') {
+      const [state, setState] = React.useState(
+        () => window.localStorage.getItem(key) || defaultValue
+      )
 
       React.useEffect(() => {
-        console.log('Greeting useEffect')
-        window.localStorage.setItem('name', name)
-      }, [name])
+        window.localStorage.setItem(key, state)
+      }, [key, state])
+
+      return [state, setState]
+    }
+
+    function Greeting() {
+      const [name, setName] = useLocalStorageState('name')
 
       const handleChange = event => setName(event.target.value)
       return (
@@ -43,17 +46,8 @@
       )
     }
 
-    function App() {
-      const [count, setCount] = React.useState(0)
-      return (
-        <>
-          <button onClick={() => setCount(c => c + 1)}>{count}</button>
-          <Greeting />
-        </>
-      )
-    }
 
-    ReactDOM.render(<App />, rootElement);
+    ReactDOM.render(<Greeting />, rootElement);
 
   </script>
 
